@@ -1,3 +1,4 @@
+```
 SELECT COUNT(*) FROM `sample_table`;
 
 /**
@@ -26,3 +27,12 @@ Query time: 1.236 second(s), Number of affected records: 10
     -> Table scan on sample_table  (cost=97693.75 rows=939663) (actual time=0.093..9096.920 rows=1000000 loops=1)
 */
 EXPLAIN ANALYZE SELECT * FROM `sample_table` LIMIT 10 OFFSET 999990;
+
+/**
+Query time: 6 millisecond(s), Number of affected records: 1
+-> Limit: 10 row(s)  (cost=2.36 rows=10) (actual time=0.113..0.578 rows=10 loops=1)
+    -> Filter: (sample_table.id > 999990)  (cost=2.36 rows=10) (actual time=0.078..0.369 rows=10 loops=1)
+        -> Index range scan on sample_table using PRIMARY over (999990 < id)  (cost=2.36 rows=10) (actual time=0.044..0.157 rows=10 loops=1)
+*/
+EXPLAIN ANALYZE SELECT * FROM `sample_table` where ID > 999990 order by ID limit 10
+```
